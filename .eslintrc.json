@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "prettier/@typescript-eslint"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "sort-keys-fix", "prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "sort-keys-fix/sort-keys-fix": "error"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "planbear-api",
+  "license": "MIT",
+  "private": true,
+  "author": {
+    "name": "Ali Zahid",
+    "email": "ali.zahid@live.com",
+    "url": "https://designplox.com"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "env-cmd ts-node-dev --ignore-watch node_modules --respawn --transpile-only --no-notify src/index.ts",
+    "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "apollo-server": "^2.9.0",
+    "bcrypt": "^3.0.6",
+    "geolib": "^3.0.4",
+    "graphql": "^14.5.3",
+    "graphql-middleware": "^4.0.1",
+    "graphql-shield": "^6.0.6",
+    "graphql-tools": "^4.0.5",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.6.11"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/jsonwebtoken": "^8.3.3",
+    "@types/lodash": "^4.14.137",
+    "@types/mongoose": "^5.5.13",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "env-cmd": "^9.0.3",
+    "eslint": "^6.2.2",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-sort-keys-fix": "^1.0.1",
+    "husky": "^3.0.4",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
+    "ts-node-dev": "^1.0.0-pre.41",
+    "typescript": "^3.5.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
+}
