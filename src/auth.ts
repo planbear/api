@@ -1,5 +1,6 @@
 const { SALT_ROUNDS, TOKEN_SECRET } = process.env
 
+import { AuthenticationError } from 'apollo-server'
 import { compare, hash } from 'bcrypt'
 import { Request } from 'express'
 import { rule, shield } from 'graphql-shield'
@@ -34,7 +35,7 @@ export const getUser = async (req: Request) => {
   const token = auth.substr(7)
 
   if (!token) {
-    throw new Error('Invalid auth token')
+    throw new AuthenticationError('Invalid token')
   }
 
   const data = await verify(token, TOKEN_SECRET as string)
@@ -42,13 +43,13 @@ export const getUser = async (req: Request) => {
   const id = get(data, 'userId')
 
   if (!id) {
-    throw new Error('Invalid auth token')
+    throw new AuthenticationError('Invalid token')
   }
 
   const user = await User.findById(id)
 
   if (!user) {
-    throw new Error('User not found')
+    throw new AuthenticationError('User not found')
   }
 
   return user

@@ -14,11 +14,7 @@ const schema = gql`
   type Mutation {
     approveMember(planId: ID!, userId: ID!): Result
     createComment(planId: ID!, body: String!, pinned: Boolean): Comment
-    createPlan(
-      description: String!
-      type: PlanType!
-      location: LocationInput!
-    ): Plan
+    createPlan(plan: PlanInput!): Plan
     joinPlan(planId: ID!, location: LocationInput!): Plan
     login(email: String!, password: String!): AuthResult
     register(name: String!, email: String!, password: String!): AuthResult
@@ -42,9 +38,12 @@ const schema = gql`
     id: ID!
     comments: [Comment!]
     description: String!
+    expires: String
+    max: Int
     members: [Member!]
     meta: Meta!
     status: String!
+    time: String!
     type: PlanType!
     user: User!
     created: String!
@@ -83,6 +82,15 @@ const schema = gql`
   }
 
   # input
+
+  input PlanInput {
+    description: String!
+    expires: String
+    location: LocationInput!
+    max: Int
+    time: String!
+    type: PlanType!
+  }
 
   input LocationInput {
     latitude: Float!

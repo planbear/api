@@ -75,10 +75,18 @@ const resolvers: IResolvers = {
     // create plan
     async createPlan(
       parent,
-      { description, location, type },
+      { plan: { description, expires, location, max, time, type } },
       { user }: Context
     ) {
-      const plan = await Plan.add(user, description, type, location)
+      const plan = await Plan.add({
+        description,
+        expires,
+        location,
+        max,
+        time,
+        type,
+        user
+      })
 
       await plan.populate('members.user').execPopulate()
 

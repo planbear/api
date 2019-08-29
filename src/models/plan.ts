@@ -24,12 +24,25 @@ enum PlanType {
   SHOPPING = 'shopping'
 }
 
+interface PlanInput {
+  description: string
+  expires?: string
+  location: Location
+  max?: number
+  time: string
+  type: PlanType
+  user: UserDocument
+}
+
 export interface PlanDocument extends Document {
   id: Types.ObjectId
   comments: CommentDocument[]
   description: string
+  expires: Date
   location: number[]
+  max: number
   members: MemberDocument[]
+  time: Date
   type: PlanType
   user: Types.ObjectId | UserDocument
   created: Date
@@ -39,12 +52,7 @@ export interface PlanDocument extends Document {
 }
 
 export interface PlanModel extends Model<PlanDocument> {
-  add(
-    user: UserDocument,
-    description: string,
-    type: PlanType,
-    location: Location
-  ): PlanDocument
+  add(input: PlanInput): PlanDocument
   addComment(
     planId: string,
     body: string,
@@ -69,12 +77,22 @@ const plan = new Schema(
       required: true,
       type: String
     },
+    expires: {
+      type: Date
+    },
     location: {
       required: true,
       type: [Number]
     },
+    max: {
+      type: Number
+    },
     members: {
       type: [member]
+    },
+    time: {
+      required: true,
+      type: Date
     },
     type: {
       enum: Object.values(PlanType),
@@ -101,7 +119,18 @@ plan.methods.json = function(
   user: UserDocument,
   location: Location
 ): unknown {
-  const { comments, created, description, id, members, type, updated } = this
+  const {
+    comments,
+    created,
+    description,
+    expires,
+    id,
+    max,
+    members,
+    time,
+    type,
+    updated
+  } = this
 
   const distance = geo.distance(this.location, location)
 
@@ -133,7 +162,9 @@ plan.methods.json = function(
       requested && comments.map(comment => comment.json()).filter(Boolean),
     created: created.toISOString(),
     description,
+    expires: expires && expires.toISOString(),
     id,
+    max,
     members: requested && members.map(member => member.json()).filter(Boolean),
     meta: {
       comments: comments.length,
@@ -141,6 +172,7 @@ plan.methods.json = function(
       going: approved.length
     },
     status,
+    time: time.toISOString(),
     type,
     updated: updated.toISOString(),
     user: this.user instanceof User && {
@@ -166,10 +198,7 @@ plan.statics.findByLocation = async function(
 
 plan.statics.add = async function(
   this: PlanModel,
-  user: UserDocument,
-  description: string,
-  type: PlanType,
-  location: Location
+  { description, expires, location, max, time, type, user }: PlanInput
 ): Promise<PlanDocument> {
   const { latitude, longitude } = location
 
@@ -180,8 +209,11 @@ plan.statics.add = async function(
 
   const plan = await this.create({
     description,
+    expires,
     location: [longitude, latitude],
+    max,
     members: [owner],
+    time,
     type,
     user
   })
