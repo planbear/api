@@ -116,7 +116,7 @@ plan.methods.json = function(
       return member.user.equals(user._id) && member.joined
     })
   )
-  const joined = Boolean(
+  const requested = Boolean(
     approved.find(member => {
       if (member.user instanceof User) {
         return member.user.id === user.id && member.approved
@@ -126,14 +126,15 @@ plan.methods.json = function(
     })
   )
 
-  const status = joined ? 'joined' : applied ? 'applied' : 'new'
+  const status = requested ? 'requested' : applied ? 'applied' : 'new'
 
   return {
-    comments: joined && comments.map(comment => comment.json()).filter(Boolean),
+    comments:
+      requested && comments.map(comment => comment.json()).filter(Boolean),
     created,
     description,
     id,
-    members: joined && members.map(member => member.json()).filter(Boolean),
+    members: requested && members.map(member => member.json()).filter(Boolean),
     meta: {
       comments: comments.length,
       distance,
