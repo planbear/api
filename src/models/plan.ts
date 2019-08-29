@@ -131,7 +131,7 @@ plan.methods.json = function(
   return {
     comments:
       requested && comments.map(comment => comment.json()).filter(Boolean),
-    created,
+    created: created.toISOString(),
     description,
     id,
     members: requested && members.map(member => member.json()).filter(Boolean),
@@ -142,7 +142,7 @@ plan.methods.json = function(
     },
     status,
     type,
-    updated,
+    updated: updated.toISOString(),
     user: this.user instanceof User && {
       id: this.user.id,
       name: this.user.name
