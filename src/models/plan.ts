@@ -141,7 +141,11 @@ plan.methods.json = function(
     },
     status,
     type,
-    updated
+    updated,
+    user: this.user instanceof User && {
+      id: this.user.id,
+      name: this.user.name
+    }
   }
 }
 
@@ -154,7 +158,7 @@ plan.statics.findByLocation = async function(
 ): Promise<PlanDocument[]> {
   const query = geo.buildQuery(location, radius)
 
-  const plans = await this.find(query)
+  const plans = await this.find(query).populate('user')
 
   return plans
 }

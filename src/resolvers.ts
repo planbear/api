@@ -21,6 +21,7 @@ const resolvers: IResolvers = {
       await plan
         .populate('comments.user')
         .populate('members.user')
+        .populate('user')
         .execPopulate()
 
       return plan.json(user, location)
