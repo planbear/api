@@ -56,13 +56,13 @@ const resolvers: IResolvers = {
     },
 
     // update profile
-    async updateProfile(parent, { name, notifications }, { user }: Context) {
+    async updateProfile(parent, { name, push }, { user }: Context) {
       if (name !== undefined) {
         user.name = name
       }
 
-      if (notifications !== undefined) {
-        user.notifications = notifications
+      if (push !== undefined) {
+        user.push = push
       }
 
       if (user.isModified()) {

@@ -14,7 +14,7 @@ export interface UserDocument extends Document {
   name: string
   email: string
   password: string
-  notifications: boolean
+  push: boolean
   created: Date
   updated: Date
 
@@ -38,7 +38,7 @@ const user = new Schema(
       required: true,
       type: String
     },
-    notifications: {
+    push: {
       default: true,
       type: Boolean
     },
@@ -58,14 +58,14 @@ const user = new Schema(
 // instance methods
 
 user.methods.json = function(this: UserDocument): unknown {
-  const { created, email, id, name, notifications } = this
+  const { created, email, id, name, push } = this
 
   return {
     created: created.toISOString(),
     email,
     id,
     name,
-    notifications
+    push
   }
 }
 

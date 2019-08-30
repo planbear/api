@@ -20,7 +20,7 @@ const schema = gql`
     register(name: String!, email: String!, password: String!): AuthResult
     removeComment(planId: ID!, commentId: ID!): Result
     removeMember(planId: ID!, userId: ID!): Result
-    updateProfile(name: String, notifications: Boolean): User
+    updateProfile(name: String, push: Boolean): User
   }
 
   # types
@@ -29,7 +29,7 @@ const schema = gql`
     id: ID!
     email: String!
     name: String!
-    notifications: Boolean!
+    push: Boolean!
     created: String!
     updated: String!
   }
