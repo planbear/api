@@ -100,7 +100,7 @@ const plan = new Schema(
     },
     user: {
       ref: 'User',
-      type: Schema.Types.ObjectId
+      type: Types.ObjectId
     }
   },
   {

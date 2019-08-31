@@ -27,7 +27,7 @@ export const member = new Schema({
   },
   user: {
     ref: 'User',
-    type: Schema.Types.ObjectId
+    type: Types.ObjectId
   }
 })
 
