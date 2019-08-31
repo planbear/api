@@ -4,6 +4,7 @@ const schema = gql`
   # query
 
   type Query {
+    notifications: [Notification]
     plan(planId: ID!, location: LocationInput!): Plan
     plans(location: LocationInput!, radius: Int!): [Plan]
     profile: User
@@ -30,6 +31,16 @@ const schema = gql`
     email: String!
     name: String!
     push: Boolean!
+    created: String!
+    updated: String!
+  }
+
+  type Notification {
+    action: NotificationAction!
+    id: ID!
+    source: NotificationTarget!
+    target: NotificationTarget!
+    user: User!
     created: String!
     updated: String!
   }
@@ -80,6 +91,14 @@ const schema = gql`
     road_trip
     shopping
   }
+
+  enum NotificationAction {
+    new_request
+    new_comment
+    request_approved
+  }
+
+  union NotificationTarget = Plan | User
 
   # input
 

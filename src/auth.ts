@@ -81,6 +81,7 @@ const isPlanMember = rule()(async (parent, { planId }, { user }: Context) => {
 
 export default shield({
   Query: {
+    notifications: isAuthenticated,
     plan: isAuthenticated,
     plans: isAuthenticated,
     profile: isAuthenticated

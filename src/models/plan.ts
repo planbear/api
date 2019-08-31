@@ -11,6 +11,11 @@ import { geo } from '../lib'
 import { Location } from '../types'
 import { Comment, CommentDocument, comment } from './comment'
 import { Member, MemberDocument, member } from './member'
+import {
+  Notification,
+  NotificationAction,
+  NotificationTargetType
+} from './notification'
 import { User, UserDocument } from './user'
 
 // interfaces
@@ -232,6 +237,15 @@ plan.statics.join = async function(
 
   await plan.save()
 
+  await Notification.notify({
+    action: NotificationAction.NEW_REQUEST,
+    source: user,
+    sourceType: NotificationTargetType.USER,
+    target: plan,
+    targetType: NotificationTargetType.PLAN,
+    user: plan.user
+  })
+
   return plan
 }
 
@@ -258,6 +272,15 @@ plan.statics.approve = async function(
 
   await plan.save()
 
+  await Notification.notify({
+    action: NotificationAction.REQUEST_APPROVED,
+    source: plan.user,
+    sourceType: NotificationTargetType.USER,
+    target: plan,
+    targetType: NotificationTargetType.PLAN,
+    user: member.user
+  })
+
   return true
 }
 
@@ -283,6 +306,17 @@ plan.statics.addComment = async function(
   plan.comments.push(comment)
 
   await plan.save()
+
+  await Notification.notifyMultiple({
+    action: NotificationAction.NEW_COMMENT,
+    source: user,
+    sourceType: NotificationTargetType.USER,
+    target: plan,
+    targetType: NotificationTargetType.PLAN,
+    users: plan.members
+      .filter(member => !member.user.equals(user._id))
+      .map(member => member.user)
+  })
 
   return comment
 }

@@ -1,10 +1,25 @@
 import { IResolvers } from 'graphql-tools'
 
-import { Plan, User } from './models'
+import { Notification, Plan, User } from './models'
 import { Context } from './types'
 
 const resolvers: IResolvers = {
   Query: {
+    // notifications
+    async notifications(parent, args, { user }: Context) {
+      const notifications = await Notification.find()
+        .where('user')
+        .equals(user.id)
+        .sort({
+          created: 1
+        })
+        .populate('source')
+        .populate('target')
+        .populate('user')
+
+      return notifications.map(notification => notification.json())
+    },
+
     // profile
     profile(parent, args, { user }: Context) {
       return user.json()
