@@ -151,7 +151,7 @@ notification.methods.json = function(this: NotificationDocument): unknown {
 notification.statics.notify = async function(
   this: NotificationModel,
   { action, source, sourceType, target, targetType, user }: NotificationOneInput
-) {
+): Promise<void> {
   await this.create({
     action,
     source,
@@ -172,7 +172,7 @@ notification.statics.notifyMultiple = async function(
     targetType,
     users
   }: NotificationMultipleInput
-) {
+): Promise<void> {
   await this.create(
     users.map(user => ({
       action,
