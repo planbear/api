@@ -137,8 +137,6 @@ const resolvers: IResolvers = {
     // create comment
     async createComment(parent, { planId, body, pinned }, { user }: Context) {
       const comment = await Plan.addComment(planId, body, pinned, user)
-        .populate('user')
-        .execPopulate()
 
       return comment.json()
     },
