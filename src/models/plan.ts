@@ -41,6 +41,7 @@ interface PlanInput {
 
 export interface PlanDocument extends Document {
   id: Types.ObjectId
+  blocked: Types.ObjectId[]
   comments: CommentDocument[]
   description: string
   expires: Date
@@ -65,6 +66,7 @@ export interface PlanModel extends Model<PlanDocument> {
     user: UserDocument
   ): CommentDocument
   approve(planId: string, userId: string): boolean
+  block(planId: string, userId: string): boolean
   join(planId: string, user: UserDocument): PlanDocument
   removeComment(postId: string, commentId: string): boolean
   removeMember(postId: string, userId: string): boolean
@@ -74,6 +76,9 @@ export interface PlanModel extends Model<PlanDocument> {
 
 const plan = new Schema(
   {
+    blocked: {
+      type: [Types.ObjectId]
+    },
     comments: {
       type: [comment]
     },
@@ -280,6 +285,34 @@ plan.statics.approve = async function(
     targetType: NotificationTargetType.PLAN,
     user: member.user
   })
+
+  return true
+}
+
+plan.statics.block = async function(
+  this: PlanModel,
+  planId: string,
+  userId: string
+): Promise<boolean> {
+  const plan = await this.findById(planId)
+
+  if (!plan) {
+    throw new Error('Plan not found')
+  }
+
+  const index = plan.members.findIndex(member =>
+    member.user.equals(userId as MongooseDocument['_id'])
+  )
+
+  if (index >= 0) {
+    plan.members.splice(index, 1)
+  }
+
+  if (!plan.blocked.includes(userId as MongooseDocument['_id'])) {
+    plan.blocked.push(userId as MongooseDocument['_id'])
+  }
+
+  await plan.save()
 
   return true
 }

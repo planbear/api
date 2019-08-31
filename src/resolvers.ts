@@ -140,6 +140,15 @@ const resolvers: IResolvers = {
       }
     },
 
+    // block member
+    async blockMember(parent, { planId, userId }) {
+      const success = await Plan.block(planId, userId)
+
+      return {
+        success
+      }
+    },
+
     // remove member
     async removeMember(parent, { planId, userId }) {
       const success = await Plan.removeMember(planId, userId)

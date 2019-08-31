@@ -14,6 +14,7 @@ const schema = gql`
 
   type Mutation {
     approveMember(planId: ID!, userId: ID!): Result
+    blockMember(planId: ID!, userId: ID!): Result
     createComment(planId: ID!, body: String!, pinned: Boolean): Comment
     createPlan(plan: PlanInput!): Plan
     joinPlan(planId: ID!, location: LocationInput!): Plan
