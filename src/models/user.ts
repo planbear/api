@@ -38,13 +38,13 @@ const user = new Schema(
       required: true,
       type: String
     },
-    push: {
-      default: true,
-      type: Boolean
-    },
     password: {
       required: true,
       type: String
+    },
+    push: {
+      default: true,
+      type: Boolean
     }
   },
   {
