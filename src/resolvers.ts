@@ -13,23 +13,39 @@ const resolvers: IResolvers = {
     // plan
     async plan(parent, { planId, location }, { user }: Context) {
       const plan = await Plan.findById(planId)
+        .populate('comments.user')
+        .populate('members.user')
+        .populate('user')
 
       if (!plan) {
         throw new Error('Plan not found')
       }
-
-      await plan
-        .populate('comments.user')
-        .populate('members.user')
-        .populate('user')
-        .execPopulate()
 
       return plan.json(user, location)
     },
 
     // plans
     async plans(parent, { radius, location }, { user }: Context) {
-      const plans = await Plan.findByLocation(location, radius)
+      const { latitude, longitude } = location
+
+      const plans = await Plan.find({
+        $expr: {
+          $gt: [
+            '$max',
+            {
+              $size: '$members'
+            }
+          ]
+        },
+        location: {
+          $geoWithin: {
+            $centerSphere: [[longitude, latitude], radius / 6378.1]
+          }
+        },
+        expires: {
+          $gt: new Date()
+        }
+      }).populate('user')
 
       return plans.map(plan => plan.json(user, location))
     }
@@ -87,8 +103,8 @@ const resolvers: IResolvers = {
         type,
         user
       })
-
-      await plan.populate('members.user').execPopulate()
+        .populate('members.user')
+        .execPopulate()
 
       return plan.json(user, location)
     },
@@ -121,8 +137,8 @@ const resolvers: IResolvers = {
     // create comment
     async createComment(parent, { planId, body, pinned }, { user }: Context) {
       const comment = await Plan.addComment(planId, body, pinned, user)
-
-      await comment.populate('user').execPopulate()
+        .populate('user')
+        .execPopulate()
 
       return comment.json()
     },

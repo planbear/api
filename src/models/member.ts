@@ -10,7 +10,7 @@ export interface MemberDocument extends Document {
   joined: Date
   user: Types.ObjectId | UserDocument
 
-  json(): unknown
+  json(user: UserDocument): unknown
 }
 
 // schema
@@ -33,11 +33,14 @@ export const member = new Schema({
 
 // instance methods
 
-member.methods.json = function(this: MemberDocument): unknown {
-  const { approved, joined, user } = this
+member.methods.json = function(
+  this: MemberDocument,
+  user: UserDocument
+): unknown {
+  const { approved, joined } = this
 
-  if (user instanceof User) {
-    const { id, name } = user
+  if (this.user instanceof User) {
+    const { id, name } = this.user
 
     return {
       approved,

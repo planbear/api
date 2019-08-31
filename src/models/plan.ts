@@ -60,7 +60,6 @@ export interface PlanModel extends Model<PlanDocument> {
     user: UserDocument
   ): CommentDocument
   approve(planId: string, userId: string): boolean
-  findByLocation(location: Location, radius: number): PlanDocument[]
   join(planId: string, user: UserDocument): PlanDocument
   removeComment(postId: string, commentId: string): boolean
   removeMember(postId: string, userId: string): boolean
@@ -134,9 +133,9 @@ plan.methods.json = function(
 
   const distance = geo.distance(this.location, location)
 
-  const approved = members.filter(({ approved }) => approved)
+  const approvedMembers = members.filter(({ approved }) => approved)
 
-  const applied = Boolean(
+  const requested = Boolean(
     members.find(member => {
       if (member.user instanceof User) {
         return member.user.id === user.id && member.joined
@@ -145,8 +144,8 @@ plan.methods.json = function(
       return member.user.equals(user._id) && member.joined
     })
   )
-  const requested = Boolean(
-    approved.find(member => {
+  const joined = Boolean(
+    approvedMembers.find(member => {
       if (member.user instanceof User) {
         return member.user.id === user.id && member.approved
       }
@@ -155,21 +154,20 @@ plan.methods.json = function(
     })
   )
 
-  const status = requested ? 'requested' : applied ? 'applied' : 'new'
+  const status = joined ? 'joined' : requested ? 'requested' : 'new'
 
   return {
-    comments:
-      requested && comments.map(comment => comment.json()).filter(Boolean),
+    comments: joined && comments.map(comment => comment.json()).filter(Boolean),
     created: created.toISOString(),
     description,
     expires: expires && expires.toISOString(),
     id,
-    max,
-    members: requested && members.map(member => member.json()).filter(Boolean),
+    members: joined && members.map(member => member.json(user)).filter(Boolean),
     meta: {
       comments: comments.length,
       distance,
-      going: approved.length
+      going: approvedMembers.length,
+      max
     },
     status,
     time: time.toISOString(),
@@ -183,18 +181,6 @@ plan.methods.json = function(
 }
 
 // static methods
-
-plan.statics.findByLocation = async function(
-  this: PlanModel,
-  location: Location,
-  radius: number
-): Promise<PlanDocument[]> {
-  const query = geo.buildQuery(location, radius)
-
-  const plans = await this.find(query).populate('user')
-
-  return plans
-}
 
 plan.statics.add = async function(
   this: PlanModel,
@@ -232,7 +218,7 @@ plan.statics.join = async function(
     throw new Error('Plan not found')
   }
 
-  const exists = plan.members.find(person => person.user.equals(user._id))
+  const exists = plan.members.find(member => member.user.equals(user._id))
 
   if (exists) {
     return plan

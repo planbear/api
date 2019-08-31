@@ -39,7 +39,6 @@ const schema = gql`
     comments: [Comment!]
     description: String!
     expires: String
-    max: Int
     members: [Member!]
     meta: Meta!
     status: String!
@@ -62,6 +61,7 @@ const schema = gql`
     comments: Int!
     distance: Float!
     going: Int!
+    max: Int
   }
 
   type Member {
