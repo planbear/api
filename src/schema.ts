@@ -53,7 +53,7 @@ const schema = gql`
     expires: String
     members: [Member!]
     meta: Meta!
-    status: String!
+    status: PlanStatus!
     time: String!
     type: PlanType!
     user: User!
@@ -82,6 +82,12 @@ const schema = gql`
     joined: String!
     name: String!
     owner: Boolean!
+  }
+
+  enum PlanStatus {
+    joined
+    new
+    requested
   }
 
   enum PlanType {
