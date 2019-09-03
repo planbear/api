@@ -40,13 +40,10 @@ member.methods.json = function(
   const { approved, joined } = this
 
   if (this.user instanceof User) {
-    const { id, name } = this.user
-
     return {
+      ...this.user.json(),
       approved,
-      id,
       joined: joined.toISOString(),
-      name,
       owner: this.user.equals(user._id)
     }
   }
