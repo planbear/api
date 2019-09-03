@@ -14,6 +14,7 @@ import typeDefs from './schema'
     MONGO_URI as string,
     {
       useCreateIndex: true,
+      useFindAndModify: true,
       useNewUrlParser: true
     }
   )
