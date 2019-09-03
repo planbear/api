@@ -88,6 +88,7 @@ export default shield({
   },
   Mutation: {
     approveMember: isPlanOwner,
+    blockMember: isPlanOwner,
     createComment: isPlanMember,
     createPlan: isAuthenticated,
     joinPlan: isAuthenticated,
