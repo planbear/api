@@ -19,6 +19,7 @@ const schema = gql`
     createPlan(plan: PlanInput!): Plan
     joinPlan(planId: ID!, location: LocationInput!): Plan
     login(email: String!, password: String!): AuthResult
+    rateUser(planId: ID!, userId: ID!, rating: Int!): Result
     register(name: String!, email: String!, password: String!): AuthResult
     removeComment(planId: ID!, commentId: ID!): Result
     removeMember(planId: ID!, userId: ID!): Result
@@ -32,6 +33,7 @@ const schema = gql`
     email: String!
     name: String!
     push: Boolean!
+    rating: Float!
     created: String!
     updated: String!
   }
@@ -81,6 +83,7 @@ const schema = gql`
     approved: Boolean!
     joined: String!
     name: String!
+    rating: Float!
     owner: Boolean!
   }
 

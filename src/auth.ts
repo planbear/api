@@ -92,6 +92,7 @@ export default shield({
     createComment: isPlanMember,
     createPlan: isAuthenticated,
     joinPlan: isAuthenticated,
+    rateUser: isAuthenticated,
     removeComment: isPlanOwner,
     removeMember: isPlanOwner,
     updateProfile: isAuthenticated

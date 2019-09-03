@@ -1,6 +1,6 @@
 import { IResolvers } from 'graphql-tools'
 
-import { Notification, Plan, User } from './models'
+import { Notification, Plan, Rating, User } from './models'
 import { Context } from './types'
 
 const resolvers: IResolvers = {
@@ -143,6 +143,15 @@ const resolvers: IResolvers = {
     // block member
     async blockMember(parent, { planId, userId }) {
       const success = await Plan.block(planId, userId)
+
+      return {
+        success
+      }
+    },
+
+    // rate user
+    async rateUser(parent, { planId, rating, userId }, { user }: Context) {
+      const success = await Rating.add(rating, planId, userId, user)
 
       return {
         success

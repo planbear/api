@@ -15,6 +15,7 @@ export interface UserDocument extends Document {
   email: string
   password: string
   push: boolean
+  rating: number
   created: Date
   updated: Date
 
@@ -24,6 +25,7 @@ export interface UserDocument extends Document {
 export interface UserModel extends Model<UserDocument> {
   register(name: string, email: string, password: string): AuthResult
   login(email: string, password: string): AuthResult
+  rate(rating: number, planId: Types.ObjectId, userId: Types.ObjectId): void
 }
 
 // schema
@@ -45,6 +47,10 @@ const user = new Schema(
     push: {
       default: true,
       type: Boolean
+    },
+    rating: {
+      default: 5,
+      type: Number
     }
   },
   {
@@ -58,14 +64,15 @@ const user = new Schema(
 // instance methods
 
 user.methods.json = function(this: UserDocument): unknown {
-  const { created, email, id, name, push } = this
+  const { created, email, id, name, push, rating } = this
 
   return {
     created: created.toISOString(),
     email,
     id,
     name,
-    push
+    push,
+    rating
   }
 }
 
