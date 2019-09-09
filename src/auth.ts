@@ -38,7 +38,7 @@ export const getUser = async (req: Request) => {
     throw new AuthenticationError('Invalid token')
   }
 
-  const data = await verify(token, TOKEN_SECRET as string)
+  const data = verify(token, TOKEN_SECRET as string)
 
   const id = get(data, 'userId')
 
