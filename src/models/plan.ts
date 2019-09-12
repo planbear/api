@@ -167,12 +167,16 @@ plan.methods.json = function(
   const status = joined ? 'joined' : requested ? 'requested' : 'new'
 
   return {
-    comments: joined && comments.map(comment => comment.json()).filter(Boolean),
+    comments: joined
+      ? comments.map(comment => comment.json()).filter(Boolean)
+      : [],
     created: created.toISOString(),
     description,
     expires: expires && expires.toISOString(),
     id,
-    members: joined && members.map(member => member.json(user)).filter(Boolean),
+    members: joined
+      ? members.map(member => member.json(user)).filter(Boolean)
+      : [],
     meta: {
       comments: comments.length,
       distance,
