@@ -118,8 +118,10 @@ const resolvers: IResolvers = {
         type,
         user
       })
-        .populate('members.user')
-        .execPopulate()
+
+      await Plan.populate(plan, {
+        path: 'members.user'
+      })
 
       return plan.json(user, location)
     },
