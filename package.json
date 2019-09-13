@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc",
     "dev": "env-cmd ts-node-dev --ignore-watch node_modules --respawn --transpile-only --no-notify src/index.ts",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "apollo-server": "^2.9.3",
