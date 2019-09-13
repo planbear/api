@@ -58,18 +58,18 @@ export interface PlanDocument extends Document {
 }
 
 export interface PlanModel extends Model<PlanDocument> {
-  add(input: PlanInput): PlanDocument
+  add(input: PlanInput): Promise<PlanDocument>
   addComment(
     planId: string,
     body: string,
     pinned: boolean,
     user: UserDocument
-  ): CommentDocument
-  approve(planId: string, userId: string): boolean
-  block(planId: string, userId: string): boolean
-  join(planId: string, user: UserDocument): PlanDocument
-  removeComment(postId: string, commentId: string): boolean
-  removeMember(postId: string, userId: string): boolean
+  ): Promise<CommentDocument>
+  approve(planId: string, userId: string): Promise<boolean>
+  block(planId: string, userId: string): Promise<boolean>
+  join(planId: string, user: UserDocument): Promise<PlanDocument>
+  removeComment(postId: string, commentId: string): Promise<boolean>
+  removeMember(postId: string, userId: string): Promise<boolean>
 }
 
 // schema

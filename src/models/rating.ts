@@ -22,7 +22,7 @@ export interface RatingModel extends Model<RatingDocument> {
     planId: Types.ObjectId,
     userId: Types.ObjectId,
     user: UserDocument
-  ): boolean
+  ): Promise<boolean>
 }
 
 // schema

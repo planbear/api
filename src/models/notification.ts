@@ -49,8 +49,8 @@ export interface NotificationDocument extends Document {
 }
 
 export interface NotificationModel extends Model<NotificationDocument> {
-  notify(input: NotificationOneInput): void
-  notifyMultiple(input: NotificationMultipleInput): void
+  notify(input: NotificationOneInput): Promise<void>
+  notifyMultiple(input: NotificationMultipleInput): Promise<void>
 }
 
 // schema

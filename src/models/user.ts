@@ -23,9 +23,13 @@ export interface UserDocument extends Document {
 }
 
 export interface UserModel extends Model<UserDocument> {
-  register(name: string, email: string, password: string): AuthResult
-  login(email: string, password: string): AuthResult
-  rate(rating: number, planId: Types.ObjectId, userId: Types.ObjectId): void
+  register(name: string, email: string, password: string): Promise<AuthResult>
+  login(email: string, password: string): Promise<AuthResult>
+  rate(
+    rating: number,
+    planId: Types.ObjectId,
+    userId: Types.ObjectId
+  ): Promise<void>
 }
 
 // schema
