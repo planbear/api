@@ -90,6 +90,7 @@ const plan = new Schema(
       type: Date
     },
     location: {
+      index: '2d',
       required: true,
       type: [Number]
     },
@@ -110,6 +111,7 @@ const plan = new Schema(
       type: String
     },
     user: {
+      index: true,
       ref: 'User',
       type: Types.ObjectId
     }

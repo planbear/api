@@ -38,7 +38,8 @@ const user = new Schema(
   {
     email: {
       required: true,
-      type: String
+      type: String,
+      unique: true
     },
     name: {
       required: true,
