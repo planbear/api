@@ -187,7 +187,7 @@ plan.methods.json = function(
     time: time.toISOString(),
     type,
     updated: updated.toISOString(),
-    user: user.json()
+    user: this.user instanceof User && this.user.json()
   }
 }
 
