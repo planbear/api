@@ -15,7 +15,8 @@ import typeDefs from './schema'
     {
       useCreateIndex: true,
       useFindAndModify: true,
-      useNewUrlParser: true
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     }
   )
 
