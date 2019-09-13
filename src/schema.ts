@@ -35,7 +35,6 @@ const schema = gql`
     push: Boolean!
     rating: Float!
     created: String!
-    updated: String!
   }
 
   type Notification {
@@ -52,7 +51,7 @@ const schema = gql`
     id: ID!
     comments: [Comment!]
     description: String!
-    expires: String
+    expires: String!
     members: [Member!]
     meta: Meta!
     status: PlanStatus!
@@ -75,7 +74,7 @@ const schema = gql`
     comments: Int!
     distance: Float!
     going: Int!
-    max: Int
+    max: Int!
   }
 
   type Member {

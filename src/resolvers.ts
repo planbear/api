@@ -44,14 +44,21 @@ const resolvers: IResolvers = {
       const { latitude, longitude } = location
 
       const plans = await Plan.find({
-        $expr: {
-          $gt: [
-            '$max',
-            {
-              $size: '$members'
+        $or: [
+          {
+            $expr: {
+              $gt: [
+                '$max',
+                {
+                  $size: '$members'
+                }
+              ]
             }
-          ]
-        },
+          },
+          {
+            max: 0
+          }
+        ],
         location: {
           $geoWithin: {
             $centerSphere: [[longitude, latitude], radius / 6378.1]

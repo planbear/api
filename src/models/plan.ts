@@ -94,6 +94,7 @@ const plan = new Schema(
       type: [Number]
     },
     max: {
+      default: 0,
       type: Number
     },
     members: {
@@ -172,7 +173,11 @@ plan.methods.json = function(
       : [],
     created: created.toISOString(),
     description,
-    expires: expires && expires.toISOString(),
+    expires: expires
+      ? expires !== time
+        ? expires.toISOString()
+        : undefined
+      : undefined,
     id,
     members: joined
       ? members.map(member => member.json(user)).filter(Boolean)
@@ -206,7 +211,7 @@ plan.statics.add = async function(
 
   const plan = await this.create({
     description,
-    expires,
+    expires: expires || time,
     location: [longitude, latitude],
     max,
     members: [owner],
