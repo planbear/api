@@ -182,7 +182,16 @@ plan.methods.json = function(
       : undefined,
     id,
     members: joined
-      ? members.map(member => member.json(user)).filter(Boolean)
+      ? members
+          .filter(member => {
+            if (this.user instanceof User) {
+              return this.user.equals(user._id) || member.approved
+            }
+
+            return this.user.equals(user._id) || member.approved
+          })
+          .map(member => member.json(user))
+          .filter(Boolean)
       : [],
     meta: {
       comments: comments.length,
