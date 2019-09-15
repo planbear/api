@@ -22,8 +22,22 @@ const resolvers: IResolvers = {
     },
 
     // profile
-    profile(parent, args, { user }: Context) {
-      return user.json()
+    async profile(parent, args, { location, user }: Context) {
+      const plans = await Plan.find({
+        $or: [
+          {
+            user: user._id
+          },
+          {
+            'members.user': user._id
+          }
+        ]
+      }).populate('user')
+
+      return {
+        ...user.json(),
+        plans: plans.map(plan => plan.json(user, location))
+      }
     },
 
     // plan

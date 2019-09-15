@@ -101,7 +101,7 @@ export default shield({
     notifications: isAuthenticated,
     plan: and(isAuthenticated, hasLocation),
     plans: and(isAuthenticated, hasLocation),
-    profile: isAuthenticated
+    profile: and(isAuthenticated, hasLocation)
   },
   Mutation: {
     approveMember: isPlanOwner,

@@ -31,6 +31,7 @@ const schema = gql`
     id: ID!
     email: String!
     name: String!
+    plans: [Plan!]!
     push: Boolean!
     rating: Float!
     created: String!
