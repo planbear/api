@@ -97,7 +97,8 @@ rating.statics.add = async function(
     user: userId
   })
 
-  const updatedRating = sumBy(ratings, 'rating') / ratings.length || 0
+  const updatedRating =
+    (sumBy(ratings, 'rating') + 5) / (ratings.length + 1) || 0
 
   await User.findByIdAndUpdate(userId, {
     rating: updatedRating
