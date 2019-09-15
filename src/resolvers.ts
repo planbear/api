@@ -1,3 +1,4 @@
+import { AuthenticationError } from 'apollo-server'
 import { IResolvers } from 'graphql-tools'
 
 import { Notification, Plan, Rating, User } from './models'
@@ -36,6 +37,10 @@ const resolvers: IResolvers = {
         throw new Error('Plan not found')
       }
 
+      if (plan.blocked.includes(user._id)) {
+        throw new AuthenticationError('Plan not found')
+      }
+
       return plan.json(user, location)
     },
 
@@ -59,6 +64,9 @@ const resolvers: IResolvers = {
             max: 0
           }
         ],
+        blocked: {
+          $nin: user._id
+        },
         location: {
           $geoWithin: {
             $centerSphere: [[longitude, latitude], radius / 6378.1]
