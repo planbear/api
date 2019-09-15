@@ -1,6 +1,7 @@
 import { UserDocument } from './models/user'
 
 export interface Context {
+  location: Location
   user: UserDocument
 }
 

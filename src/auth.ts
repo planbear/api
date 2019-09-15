@@ -3,7 +3,7 @@ const { SALT_ROUNDS, TOKEN_SECRET } = process.env
 import { AuthenticationError } from 'apollo-server'
 import { compare, hash } from 'bcrypt'
 import { Request } from 'express'
-import { rule, shield } from 'graphql-shield'
+import { and, rule, shield } from 'graphql-shield'
 import { sign, verify } from 'jsonwebtoken'
 import { get } from 'lodash'
 
@@ -55,8 +55,25 @@ export const getUser = async (req: Request) => {
   return user
 }
 
+export const getLocation = (req: Request) => {
+  const location = req.get('location')
+
+  if (location) {
+    const [latitude, longitude] = location.split(',')
+
+    return {
+      latitude: Number(latitude),
+      longitude: Number(longitude)
+    }
+  }
+}
+
 const isAuthenticated = rule()(
   (parent, args, { user }: Context) => user !== null
+)
+
+const hasLocation = rule()(
+  (parent, args, { location }: Context) => location !== null
 )
 
 const isPlanOwner = rule()(async (parent, { planId }, { user }: Context) => {
@@ -82,8 +99,8 @@ const isPlanMember = rule()(async (parent, { planId }, { user }: Context) => {
 export default shield({
   Query: {
     notifications: isAuthenticated,
-    plan: isAuthenticated,
-    plans: isAuthenticated,
+    plan: and(isAuthenticated, hasLocation),
+    plans: and(isAuthenticated, hasLocation),
     profile: isAuthenticated
   },
   Mutation: {
@@ -91,10 +108,9 @@ export default shield({
     blockMember: isPlanOwner,
     createComment: isPlanMember,
     createPlan: isAuthenticated,
-    joinPlan: isAuthenticated,
+    joinPlan: and(isAuthenticated, hasLocation),
     rateUser: isAuthenticated,
     removeComment: isPlanOwner,
-    removeMember: isPlanOwner,
     updateProfile: isAuthenticated
   }
 })

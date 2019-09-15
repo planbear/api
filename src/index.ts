@@ -5,7 +5,7 @@ import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { connect } from 'mongoose'
 
-import auth, { getUser } from './auth'
+import auth, { getLocation, getUser } from './auth'
 import resolvers from './resolvers'
 import typeDefs from './schema'
 
@@ -31,9 +31,11 @@ import typeDefs from './schema'
   const server = new ApolloServer({
     schema,
     async context({ req }) {
+      const location = getLocation(req)
       const user = await getUser(req)
 
       return {
+        location,
         user
       }
     }

@@ -5,8 +5,8 @@ const schema = gql`
 
   type Query {
     notifications: [Notification]
-    plan(planId: ID!, location: LocationInput!): Plan
-    plans(location: LocationInput!, radius: Int!): [Plan]
+    plan(planId: ID!): Plan
+    plans(radius: Int!): [Plan]
     profile: User
   }
 
@@ -17,7 +17,7 @@ const schema = gql`
     blockMember(planId: ID!, userId: ID!): Result
     createComment(planId: ID!, body: String!, pinned: Boolean): Comment
     createPlan(plan: PlanInput!): Plan
-    joinPlan(planId: ID!, location: LocationInput!): Plan
+    joinPlan(planId: ID!): Plan
     login(email: String!, password: String!): AuthResult
     rateUser(planId: ID!, userId: ID!, rating: Int!): Result
     register(name: String!, email: String!, password: String!): AuthResult

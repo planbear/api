@@ -26,7 +26,7 @@ const resolvers: IResolvers = {
     },
 
     // plan
-    async plan(parent, { planId, location }, { user }: Context) {
+    async plan(parent, { planId }, { location, user }: Context) {
       const plan = await Plan.findById(planId)
         .populate('comments.user')
         .populate('members.user')
@@ -40,7 +40,7 @@ const resolvers: IResolvers = {
     },
 
     // plans
-    async plans(parent, { radius, location }, { user }: Context) {
+    async plans(parent, { radius }, { location, user }: Context) {
       const { latitude, longitude } = location
 
       const plans = await Plan.find({
@@ -113,8 +113,8 @@ const resolvers: IResolvers = {
     // create plan
     async createPlan(
       parent,
-      { plan: { description, expires, location, max, time, type } },
-      { user }: Context
+      { plan: { description, expires, max, time, type } },
+      { location, user }: Context
     ) {
       const plan = await Plan.add({
         description,
@@ -134,7 +134,7 @@ const resolvers: IResolvers = {
     },
 
     // join plan
-    async joinPlan(parent, { planId, location }, { user }: Context) {
+    async joinPlan(parent, { planId }, { location, user }: Context) {
       const plan = await Plan.join(planId, user)
 
       return plan.json(user, location)
