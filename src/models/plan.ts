@@ -381,7 +381,9 @@ plan.statics.removeComment = async function(
     throw new Error('Plan not found')
   }
 
-  const index = plan.comments.findIndex(comment => comment.id.equals(commentId))
+  const index = plan.comments.findIndex(comment =>
+    comment._id.equals(commentId)
+  )
 
   if (index < 0) {
     throw new Error('Comment not found')
