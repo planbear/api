@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { Document, Model, Schema, Types, model } from 'mongoose'
 
 import { createToken, signPassword, verifyPassword } from '../auth'
@@ -72,7 +73,7 @@ user.methods.json = function(this: UserDocument): unknown {
   const { created, email, id, name, push, rating } = this
 
   return {
-    created: created.toISOString(),
+    created: moment(created).toISOString(),
     email,
     id,
     name,

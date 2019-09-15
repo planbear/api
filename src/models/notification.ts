@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { Document, Model, Schema, Types, model } from 'mongoose'
 
 import { Plan, PlanDocument } from './plan'
@@ -141,11 +142,11 @@ notification.methods.json = function(this: NotificationDocument): unknown {
 
   return {
     action,
-    created: created.toISOString(),
+    created: moment(created).toISOString(),
     id,
     source: _source,
     target: _target,
-    updated: updated.toISOString(),
+    updated: moment(updated).toISOString(),
     user: user instanceof User && {
       id: user.id,
       name: user.name

@@ -1,3 +1,4 @@
+import moment from 'moment'
 import {
   Document,
   Model,
@@ -172,11 +173,11 @@ plan.methods.json = function(
     comments: joined
       ? comments.map(comment => comment.json()).filter(Boolean)
       : [],
-    created: created.toISOString(),
+    created: moment(created).toISOString(),
     description,
     expires: expires
       ? expires !== time
-        ? expires.toISOString()
+        ? moment(expires).toISOString()
         : undefined
       : undefined,
     id,
@@ -199,9 +200,9 @@ plan.methods.json = function(
       max
     },
     status,
-    time: time.toISOString(),
+    time: moment(time).toISOString(),
     type,
-    updated: updated.toISOString(),
+    updated: moment(updated).toISOString(),
     user: this.user instanceof User && this.user.json()
   }
 }

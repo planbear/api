@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { Document, Schema, Types, model } from 'mongoose'
 
 import { User, UserDocument } from './user'
@@ -43,7 +44,7 @@ member.methods.json = function(
     return {
       ...this.user.json(),
       approved,
-      joined: joined.toISOString(),
+      joined: moment(joined).toISOString(),
       owner: this.user.equals(user._id)
     }
   }

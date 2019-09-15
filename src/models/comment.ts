@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { Document, Schema, Types, model } from 'mongoose'
 
 import { User, UserDocument } from './user'
@@ -43,7 +44,7 @@ comment.methods.json = function(this: CommentDocument): unknown {
   if (user instanceof User) {
     return {
       body,
-      created: created.toISOString(),
+      created: moment(created).toISOString(),
       id,
       pinned,
       user: {
