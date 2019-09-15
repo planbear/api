@@ -142,16 +142,14 @@ const resolvers: IResolvers = {
 
     // approve member
     async approveMember(parent, { planId, userId }) {
-      const success = await Plan.approve(planId, userId)
+      const member = await Plan.approveMember(planId, userId)
 
-      return {
-        success
-      }
+      return member
     },
 
     // block member
     async blockMember(parent, { planId, userId }) {
-      const success = await Plan.block(planId, userId)
+      const success = await Plan.blockMember(planId, userId)
 
       return {
         success
@@ -161,15 +159,6 @@ const resolvers: IResolvers = {
     // rate user
     async rateUser(parent, { planId, rating, userId }, { user }: Context) {
       const success = await Rating.add(rating, planId, userId, user)
-
-      return {
-        success
-      }
-    },
-
-    // remove member
-    async removeMember(parent, { planId, userId }) {
-      const success = await Plan.removeMember(planId, userId)
 
       return {
         success

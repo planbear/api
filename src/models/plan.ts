@@ -65,11 +65,10 @@ export interface PlanModel extends Model<PlanDocument> {
     pinned: boolean,
     user: UserDocument
   ): Promise<CommentDocument>
-  approve(planId: string, userId: string): Promise<boolean>
-  block(planId: string, userId: string): Promise<boolean>
+  approveMember(planId: string, userId: string): Promise<MemberDocument>
+  blockMember(planId: string, userId: string): Promise<boolean>
   join(planId: string, user: UserDocument): Promise<PlanDocument>
   removeComment(postId: string, commentId: string): Promise<boolean>
-  removeMember(postId: string, userId: string): Promise<boolean>
 }
 
 // schema
@@ -271,11 +270,11 @@ plan.statics.join = async function(
   return plan
 }
 
-plan.statics.approve = async function(
+plan.statics.approveMember = async function(
   this: PlanModel,
   planId: string,
   userId: string
-): Promise<boolean> {
+): Promise<MemberDocument> {
   const plan = await this.findById(planId)
 
   if (!plan) {
@@ -303,10 +302,10 @@ plan.statics.approve = async function(
     user: member.user
   })
 
-  return true
+  return member
 }
 
-plan.statics.block = async function(
+plan.statics.blockMember = async function(
   this: PlanModel,
   planId: string,
   userId: string
@@ -389,32 +388,6 @@ plan.statics.removeComment = async function(
   }
 
   plan.comments.splice(index, 1)
-
-  await plan.save()
-
-  return true
-}
-
-plan.statics.removeMember = async function(
-  this: PlanModel,
-  postId: string,
-  userId: string
-): Promise<boolean> {
-  const plan = await this.findById(postId)
-
-  if (!plan) {
-    throw new Error('Plan not found')
-  }
-
-  const index = plan.members.findIndex(member =>
-    member.user.equals(userId as MongooseDocument['_id'])
-  )
-
-  if (index < 0) {
-    throw new Error('Member not found')
-  }
-
-  plan.members.splice(index, 1)
 
   await plan.save()
 

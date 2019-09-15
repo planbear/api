@@ -13,7 +13,7 @@ const schema = gql`
   # mutation
 
   type Mutation {
-    approveMember(planId: ID!, userId: ID!): Result
+    approveMember(planId: ID!, userId: ID!): Member
     blockMember(planId: ID!, userId: ID!): Result
     createComment(planId: ID!, body: String!, pinned: Boolean): Comment
     createPlan(plan: PlanInput!): Plan
@@ -22,7 +22,6 @@ const schema = gql`
     rateUser(planId: ID!, userId: ID!, rating: Int!): Result
     register(name: String!, email: String!, password: String!): AuthResult
     removeComment(planId: ID!, commentId: ID!): Result
-    removeMember(planId: ID!, userId: ID!): Result
     updateProfile(name: String, push: Boolean): User
   }
 
