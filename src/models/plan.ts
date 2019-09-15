@@ -68,7 +68,7 @@ export interface PlanModel extends Model<PlanDocument> {
   approveMember(planId: string, userId: string): Promise<MemberDocument>
   blockMember(planId: string, userId: string): Promise<boolean>
   join(planId: string, user: UserDocument): Promise<PlanDocument>
-  removeComment(postId: string, commentId: string): Promise<boolean>
+  removeComment(planId: string, commentId: string): Promise<boolean>
 }
 
 // schema
@@ -330,6 +330,18 @@ plan.statics.blockMember = async function(
 
   await plan.save()
 
+  await Notification.pull({
+    action: NotificationAction.REQUEST_APPROVED,
+    source: plan.user,
+    target: plan
+  })
+
+  await Notification.pull({
+    action: NotificationAction.NEW_REQUEST,
+    source: userId as MongooseDocument['_id'],
+    target: plan
+  })
+
   return true
 }
 
@@ -372,10 +384,10 @@ plan.statics.addComment = async function(
 
 plan.statics.removeComment = async function(
   this: PlanModel,
-  postId: string,
+  planId: string,
   commentId: string
 ): Promise<boolean> {
-  const plan = await this.findById(postId)
+  const plan = await this.findById(planId)
 
   if (!plan) {
     throw new Error('Plan not found')
@@ -389,9 +401,17 @@ plan.statics.removeComment = async function(
     throw new Error('Comment not found')
   }
 
+  const { user } = plan.comments[index]
+
   plan.comments.splice(index, 1)
 
   await plan.save()
+
+  await Notification.pull({
+    action: NotificationAction.NEW_COMMENT,
+    source: user,
+    target: plan
+  })
 
   return true
 }

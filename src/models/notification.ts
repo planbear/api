@@ -34,6 +34,12 @@ interface NotificationMultipleInput {
   users: (Types.ObjectId | UserDocument)[]
 }
 
+interface NotificationDeleteInput {
+  action: NotificationAction
+  source: Types.ObjectId | PlanDocument | UserDocument
+  target: Types.ObjectId | PlanDocument | UserDocument
+}
+
 export interface NotificationDocument extends Document {
   id: Types.ObjectId
   action: NotificationAction
@@ -51,6 +57,7 @@ export interface NotificationDocument extends Document {
 export interface NotificationModel extends Model<NotificationDocument> {
   notify(input: NotificationOneInput): Promise<void>
   notifyMultiple(input: NotificationMultipleInput): Promise<void>
+  pull(input: NotificationDeleteInput): Promise<void>
 }
 
 // schema
@@ -183,6 +190,17 @@ notification.statics.notifyMultiple = async function(
       user
     }))
   )
+}
+
+notification.statics.pull = async function(
+  this: NotificationModel,
+  { action, source, target }: NotificationDeleteInput
+) {
+  await this.deleteOne({
+    action,
+    source,
+    target
+  })
 }
 
 // model
