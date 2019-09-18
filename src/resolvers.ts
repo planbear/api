@@ -202,6 +202,12 @@ const resolvers: IResolvers = {
         success
       }
     }
+  },
+
+  NotificationTarget: {
+    __resolveType({ __typename }: { __typename: string }) {
+      return __typename
+    }
   }
 }
 
