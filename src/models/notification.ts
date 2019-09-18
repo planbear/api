@@ -196,7 +196,7 @@ notification.statics.notifyMultiple = async function(
 notification.statics.pull = async function(
   this: NotificationModel,
   { action, source, target }: NotificationDeleteInput
-) {
+): Promise<void> {
   await this.deleteOne({
     action,
     source,
