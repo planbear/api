@@ -4,10 +4,9 @@ import { IResolvers } from 'graphql-tools'
 import { Notification, Plan, Rating, User } from './models'
 import { Context } from './types'
 
-const resolvers: IResolvers = {
+const resolvers: IResolvers<any, Context> = {
   Query: {
-    // notifications
-    async notifications(parent, args, { user }: Context) {
+    async notifications(parent, args, { user }) {
       const notifications = await Notification.find()
         .where('user')
         .equals(user.id)
@@ -21,8 +20,7 @@ const resolvers: IResolvers = {
       return notifications.map(notification => notification.json())
     },
 
-    // profile
-    async profile(parent, args, { location, user }: Context) {
+    async profile(parent, args, { location, user }) {
       const plans = await Plan.find({
         $or: [
           {
@@ -40,8 +38,7 @@ const resolvers: IResolvers = {
       }
     },
 
-    // plan
-    async plan(parent, { planId }, { location, user }: Context) {
+    async plan(parent, { planId }, { location, user }) {
       const plan = await Plan.findById(planId)
         .populate('comments.user')
         .populate('members.user')
@@ -58,8 +55,7 @@ const resolvers: IResolvers = {
       return plan.json(user, location)
     },
 
-    // plans
-    async plans(parent, { radius }, { location, user }: Context) {
+    async plans(parent, { radius }, { location, user }) {
       const { latitude, longitude } = location
 
       const plans = await Plan.find({
@@ -94,8 +90,8 @@ const resolvers: IResolvers = {
       return plans.map(plan => plan.json(user, location))
     }
   },
+
   Mutation: {
-    // register
     async register(parent, { name, email, password }) {
       const { token, user } = await User.register(name, email, password)
 
@@ -105,7 +101,6 @@ const resolvers: IResolvers = {
       }
     },
 
-    // login
     async login(parent, { email, password }) {
       const { token, user } = await User.login(email, password)
 
@@ -115,8 +110,7 @@ const resolvers: IResolvers = {
       }
     },
 
-    // update profile
-    async updateProfile(parent, { name, push }, { user }: Context) {
+    async updateProfile(parent, { name, push }, { user }) {
       if (name !== undefined) {
         user.name = name
       }
@@ -132,11 +126,10 @@ const resolvers: IResolvers = {
       return user
     },
 
-    // create plan
     async createPlan(
       parent,
       { plan: { description, expires, max, time, type } },
-      { location, user }: Context
+      { location, user }
     ) {
       const plan = await Plan.add({
         description,
@@ -155,21 +148,18 @@ const resolvers: IResolvers = {
       return plan.json(user, location)
     },
 
-    // join plan
-    async joinPlan(parent, { planId }, { location, user }: Context) {
+    async joinPlan(parent, { planId }, { location, user }) {
       const plan = await Plan.join(planId, user)
 
       return plan.json(user, location)
     },
 
-    // approve member
     async approveMember(parent, { planId, userId }) {
       const member = await Plan.approveMember(planId, userId)
 
       return member
     },
 
-    // block member
     async blockMember(parent, { planId, userId }) {
       const success = await Plan.blockMember(planId, userId)
 
@@ -178,8 +168,7 @@ const resolvers: IResolvers = {
       }
     },
 
-    // rate user
-    async rateUser(parent, { planId, rating, userId }, { user }: Context) {
+    async rateUser(parent, { planId, rating, userId }, { user }) {
       const success = await Rating.add(rating, planId, userId, user)
 
       return {
@@ -187,14 +176,12 @@ const resolvers: IResolvers = {
       }
     },
 
-    // create comment
-    async createComment(parent, { planId, body, pinned }, { user }: Context) {
+    async createComment(parent, { planId, body, pinned }, { user }) {
       const comment = await Plan.addComment(planId, body, pinned, user)
 
       return comment.json()
     },
 
-    // remove comment
     async removeComment(parent, { planId, commentId }) {
       const success = await Plan.removeComment(planId, commentId)
 
