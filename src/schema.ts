@@ -22,7 +22,7 @@ const schema = gql`
     rateUser(planId: ID!, userId: ID!, rating: Int!): Result
     register(name: String!, email: String!, password: String!): AuthResult
     removeComment(planId: ID!, commentId: ID!): Result
-    updateProfile(name: String, push: Boolean): User
+    updateProfile(user: UserInput!): User
   }
 
   # types
@@ -34,6 +34,7 @@ const schema = gql`
     plans: [Plan!]!
     push: Boolean!
     rating: Float!
+    version: Int!
     created: String!
   }
 
@@ -84,6 +85,7 @@ const schema = gql`
     name: String!
     rating: Float!
     owner: Boolean!
+    version: Int!
   }
 
   enum PlanStatus {
@@ -118,6 +120,12 @@ const schema = gql`
     max: Int
     time: String!
     type: PlanType!
+  }
+
+  input UserInput {
+    name: String
+    push: Boolean
+    version: Int
   }
 
   input LocationInput {

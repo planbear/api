@@ -17,6 +17,7 @@ export interface UserDocument extends Document {
   password: string
   push: boolean
   rating: number
+  version: number
   created: Date
   updated: Date
 
@@ -57,6 +58,10 @@ const user = new Schema(
     rating: {
       default: 5,
       type: Number
+    },
+    version: {
+      default: 1,
+      type: Number
     }
   },
   {
@@ -70,7 +75,7 @@ const user = new Schema(
 // instance methods
 
 user.methods.json = function(this: UserDocument): unknown {
-  const { created, email, id, name, push, rating } = this
+  const { created, email, id, name, push, rating, version } = this
 
   return {
     created: moment(created).toISOString(),
@@ -78,7 +83,8 @@ user.methods.json = function(this: UserDocument): unknown {
     id,
     name,
     push,
-    rating
+    rating,
+    version
   }
 }
 
