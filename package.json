@@ -21,7 +21,7 @@
     "graphql-middleware": "^4.0.1",
     "graphql-shield": "^6.1.0",
     "graphql-tools": "^4.0.5",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "mongoose": "^5.7.0"
